@@ -11,6 +11,7 @@ import time
 import requests
 from restconf_final import create, delete, enable, disable, status
 import os
+from netmiko_final import gigabit_status
 
 #######################################################################################
 # 2. Assign the Webex access token to the variable ACCESS_TOKEN using environment variables.
@@ -93,10 +94,10 @@ while True:
             responseMessage = disable(student_id)
         elif command == "status":
             responseMessage = status(student_id)
-        # elif command == "gigabit_status":
-        #     <!!!REPLACEME with code for gigabit_status command!!!>
-        elif command == "showrun":
-            <!!!REPLACEME with code for showrun command!!!>
+        elif command == "gigabit_status":
+            responseMessage = gigabit_status()
+        # elif command == "showrun":
+        #     <!!!REPLACEME with code for showrun command!!!>
         else:
             responseMessage = "Error: No command or unknown command"
         
@@ -114,33 +115,33 @@ while True:
         # Read Send a Message with Attachments Local File Attachments
         # https://developer.webex.com/docs/basics for more detail
 
-        if command == "showrun" and responseMessage == 'ok':
-            filename = "<!!!REPLACEME with show run filename and path!!!>"
-            fileobject = <!!!REPLACEME with open file!!!>
-            filetype = "<!!!REPLACEME with Content-type of the file!!!>"
-            postData = {
-                "roomId": <!!!REPLACEME!!!>,
-                "text": "show running config",
-                "files": (<!!!REPLACEME!!!>, <!!!REPLACEME!!!>, <!!!REPLACEME!!!>),
-            }
-            postData = MultipartEncoder(<!!!REPLACEME!!!>)
-            HTTPHeaders = {
-            "Authorization": ACCESS_TOKEN,
-            "Content-Type": <!!!REPLACEME with postData Content-Type!!!>,
-            }
-        #other commands only send text, or no attached file.
-        else:
-            postData = {"roomId": roomIdToGetMessages, "text": responseMessage}
-            postData = json.dumps(postData)
+        # if command == "showrun" and responseMessage == 'ok':
+        #     filename = "<!!!REPLACEME with show run filename and path!!!>"
+        #     fileobject = <!!!REPLACEME with open file!!!>
+        #     filetype = "<!!!REPLACEME with Content-type of the file!!!>"
+        #     postData = {
+        #         "roomId": <!!!REPLACEME!!!>,
+        #         "text": "show running config",
+        #         "files": (<!!!REPLACEME!!!>, <!!!REPLACEME!!!>, <!!!REPLACEME!!!>),
+        #     }
+        #     postData = MultipartEncoder(<!!!REPLACEME!!!>)
+        #     HTTPHeaders = {
+        #     "Authorization": ACCESS_TOKEN,
+        #     "Content-Type": <!!!REPLACEME with postData Content-Type!!!>,
+        #     }
+        # #other commands only send text, or no attached file.
+        # else:
+        #     postData = {"roomId": roomIdToGetMessages, "text": responseMessage}
+        #     postData = json.dumps(postData)
 
-            # # the Webex Teams HTTP headers, including the Authoriztion and Content-Type
-            HTTPHeaders = {"Authorization": ACCESS_TOKEN, "Content-Type": "application/json"}   
-        # postData = {"roomId": roomIdToGetMessages, "text": responseMessage}
-        # postData = json.dumps(postData)
+        #     # # the Webex Teams HTTP headers, including the Authoriztion and Content-Type
+        #     HTTPHeaders = {"Authorization": ACCESS_TOKEN, "Content-Type": "application/json"}   
+        postData = {"roomId": roomIdToGetMessages, "text": responseMessage}
+        postData = json.dumps(postData)
 
-        # # the Webex Teams HTTP headers, including the Authoriztion and Content-Type
-        # HTTPHeaders = {"Authorization": ACCESS_TOKEN, "Content-Type": "application/json"} 
-        # Post the call to the Webex Teams message API.
+        # the Webex Teams HTTP headers, including the Authoriztion and Content-Type
+        HTTPHeaders = {"Authorization": ACCESS_TOKEN, "Content-Type": "application/json"} 
+        #Post the call to the Webex Teams message API.
         r = requests.post(
             "https://webexapis.com/v1/messages",
             data=postData,
